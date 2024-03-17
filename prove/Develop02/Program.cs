@@ -8,7 +8,8 @@ class Program
         Journal journal = new Journal();
         Console.WriteLine("Welcome to your Journal");
 
-        while (true) {
+        while (true)
+        {
             Console.WriteLine("Menu");
             Console.WriteLine("1. Add Entry");
             Console.WriteLine("2. View Entries");
@@ -30,21 +31,44 @@ class Program
                     break;
 
                 case "3":
-                    journal.LoadFromFile();
+                    journal.LoadFromFile("filename.txt");
                     break;
 
                 case "4":
-                    journal.SaveToFile();
+                    journal.SaveToFile("filename.txt");
                     break;
 
                 case "5":
                     Console.WriteLine("Goodbye!");
                     break;
-                    
+
                 default:
                     Console.WriteLine("Invalid choice");
                     break;
             }
         }
+    }
+}
+
+public class Journal
+{
+    public void AddEntry()
+    {
+        // Add entry code here
+    }
+
+    public void DisplayAll()
+    {
+        // Display entries code here
+    }
+
+    public void LoadFromFile(string fileName)
+    {
+        // Load the file here
+    }
+
+    public void SaveToFile(string fileName)
+    {
+        // Save the file here
     }
 }

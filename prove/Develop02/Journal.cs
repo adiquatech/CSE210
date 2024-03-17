@@ -19,9 +19,7 @@ public class Journal
         Console.WriteLine("Please enter the date (mm/dd/yyyy): ");
         string date = Console.ReadLine();
         Console.WriteLine($"Please enter todays prompt: {prompt} ");
-        string entryText = Console.ReadLine();
-
-        Entry entry = new Entry(date, entryText);
+        Entry entry = new Entry(date, prompt);
         _entries.Add(entry);
     }
 
@@ -33,50 +31,43 @@ public class Journal
         }
     }
 
-    public void SaveToFile(string file)
+    public void SaveToFile(string fileName)
     {
-        Console.Write("Please enter the name of the file to save to: ");
-        string file = Console.ReadLine();
         try
         {
-            using (StreamWriter writer = new StreamWriter(file))
+            using (StreamWriter writer = new StreamWriter(fileName))
             {
                 foreach (Entry entry in _entries)
                 {
                     writer.WriteLine($"{entry._date}\n{entry._entryText}");
                 }
             }
-            Console.WriteLine($"File saved as: {file}");
-        } 
+            Console.WriteLine($"File saved as: {fileName}");
+        }
         catch (Exception e)
         {
-            Console.WriteLine($"Error saving to {file}: {e.Message}");
+            Console.WriteLine($"Error saving to {fileName}: {e.Message}");
         }
-       
     }
 
-    public void LoadFromFile(string file)
+    public void LoadFromFile(string fileName)
     {
-        Console.Write("Please enter the file name you would like to open from: ");
-        string file = Console.ReadLine();
-        try{
-            using ( StreamWriter reader = new StreamWriter(file))
+        try
+        {
+            using (StreamReader reader = new StreamReader(fileName))
             {
                 while (!reader.EndOfStream)
                 {
-                    string _date = reader.ReadLine();
-                    string _entryText = reader.ReadLine();
-                    Entry entry = new Entry (_date, _entryText);
-                    entries.Add(entry);
+                    string date = reader.ReadLine();
+                    Entry entry = new Entry(date, prompt);
+                    _entries.Add(entry);
                 }
-
             }
-            Console.WriteLine($"File loaded from: {file}");
-        } 
+            Console.WriteLine($"File loaded from: {fileName}");
+        }
         catch (Exception e)
         {
-            Console.WriteLine($"Error while reading entries from {file}: {e.Message}");
+            Console.WriteLine($"Error while reading entries from {fileName}: {e.Message}");
         }
-        
     }
 }

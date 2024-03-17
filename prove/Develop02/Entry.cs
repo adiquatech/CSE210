@@ -1,14 +1,17 @@
+using System;
 public class Entry 
 {
-    public string _date;
     public string _promptText;
     public string _entryText;
+    public string _date;
 
-    public Entry (string date, string promptText, string entryText)
+
+    public Entry (string promptText, string entryText, string date)
     {
-        _date = date;
         _promptText = promptText;
         _entryText = entryText;
+        _date = date;
+
     }
 
     public void Display()
