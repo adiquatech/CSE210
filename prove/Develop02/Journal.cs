@@ -1,73 +1,73 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
 
-public class Journal
+namespace DailyJournal
 {
-    public List<Entry> _entries;
-    public PromptGenerator _promptGenerator;
-
-    public Journal()
+    class Journal
     {
-        _entries = new List<Entry>();
-        _promptGenerator = new PromptGenerator();
-    }
+        public List<Entry> entries;
 
-    public void Add(Entry newEntry)
-    {
-        string prompt = _promptGenerator.GetRandomPrompt();
-        Console.WriteLine("Please enter the date (mm/dd/yyyy): ");
-        string date = Console.ReadLine();
-        Console.WriteLine($"Please enter todays prompt: {prompt} ");
-        Entry entry = new Entry(date, prompt);
-        _entries.Add(entry);
-    }
-
-    public void DisplayAll()
-    {
-        foreach (Entry entry in _entries)
+        public Journal()
         {
-            entry.DisplayEntry();
+            entries = new List<Entry>();
         }
-    }
 
-    public void SaveToFile(string fileName)
-    {
-        try
+        public void AddEntry(string prompt)
         {
-            using (StreamWriter writer = new StreamWriter(fileName))
+            Console.Write(prompt + " ");
+            string response = Console.ReadLine();
+            string date = DateTime.Now.ToString("MM/dd/yyyy");
+            entries.Add(new Entry(prompt, response, date));
+        }
+
+        public void DisplayEntries()
+        {
+            foreach (Entry entry in entries)
             {
-                foreach (Entry entry in _entries)
+                Console.WriteLine(entry.ToString());
+            }
+        }
+        public void SaveToFile()
+        {
+            Console.Write("Enter Filename: ");
+            string filename = Console.ReadLine();
+
+            using (StreamWriter writer = new StreamWriter(filename))
+            {
+                writer.WriteLine("Date,Prompt,Response");
+
+                foreach (Entry entry in entries)
                 {
-                    writer.WriteLine($"{entry._date}\n{entry._entryText}");
+                    writer.WriteLine($"{entry.GetDate()},{entry.GetPrompt().Replace(",", ",,")},{entry.GetResponse().Replace(",", ",,")}");
                 }
             }
-            Console.WriteLine($"File saved as: {fileName}");
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Error saving to {fileName}: {e.Message}");
-        }
-    }
 
-    public void LoadFromFile(string fileName)
-    {
-        try
+            Console.WriteLine("Saved");
+        }
+
+        public void LoadFromFile()
         {
-            using (StreamReader reader = new StreamReader(fileName))
+            Console.Write("Enter filename: ");
+            string filename = Console.ReadLine();
+            entries.Clear();
+
+            using (StreamReader reader = new StreamReader(filename))
             {
+                string headerLine = reader.ReadLine(); // Read and discard the header line
+
                 while (!reader.EndOfStream)
                 {
-                    string date = reader.ReadLine();
-                    Entry entry = new Entry(date, prompt);
-                    _entries.Add(entry);
+                    string entryLine = reader.ReadLine();
+                    string[] fields = entryLine.Split(',');
+
+                    string date = fields[0];
+                    string prompt = fields[1].Replace(",,", ",");
+                    string response = fields[2].Replace(",,", ",");
+
+                    entries.Add(new Entry(prompt, response, date));
                 }
             }
-            Console.WriteLine($"File loaded from: {fileName}");
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Error while reading entries from {fileName}: {e.Message}");
+
+            Console.WriteLine("Loaded");
         }
     }
 }
